@@ -4,7 +4,6 @@ import (
 	"crypto/x509"
 	"flag"
 	"fmt"
-	"log"
 	"strings"
 	"time"
 
@@ -37,10 +36,9 @@ func Do(params []string) {
 		fmt.Println(len(domainList))
 	}
 
-	// domainList = append(domainList, params...)
-	fmt.Println(domainList)
+	domainList = append(domainList, params...)
+	// fmt.Println(domainList)
 	for _, url := range domainList {
-		// fmt.Printf("domain url is %v////", url)
 		check(parse(url))
 	}
 
@@ -61,7 +59,8 @@ func check(url string) (cert *x509.Certificate) {
 
 	if err != nil {
 		// panic(err)
-		log.Fatalf("%s", err)
+		fmt.Printf("   Error: %s\n", err)
+		return
 	}
 	defer resp.Body.Close()
 
