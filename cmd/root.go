@@ -39,8 +39,10 @@ func Do(params []string) {
 		fmt.Println(len(domainList))
 	}
 
-	// domainList = append(domainList, params...)
-	// fmt.Println(domainList)
+	if URLFlag == "" && FileFlag == "" {
+		domainList = append(domainList, params[1:]...)
+	}
+
 	for _, url := range domainList {
 		wg.Add(1)
 		go check(parse(url))
