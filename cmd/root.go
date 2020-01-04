@@ -5,6 +5,7 @@ import (
 	"flag"
 	"fmt"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/tangx/check-https-expiry/backend"
@@ -14,6 +15,8 @@ var (
 	URLFlag  string
 	FileFlag string
 )
+
+var wg sync.WaitGroup
 
 func init() {
 	flag.StringVar(&URLFlag, "url", "", "read domain list from a url")
@@ -36,12 +39,13 @@ func Do(params []string) {
 		fmt.Println(len(domainList))
 	}
 
-	domainList = append(domainList, params...)
+	// domainList = append(domainList, params...)
 	// fmt.Println(domainList)
 	for _, url := range domainList {
-		check(parse(url))
+		wg.Add(1)
+		go check(parse(url))
 	}
-
+	wg.Wait()
 }
 
 func parse(hostOrURL string) string {
@@ -54,6 +58,7 @@ func parse(hostOrURL string) string {
 }
 
 func check(url string) (cert *x509.Certificate) {
+	defer wg.Done()
 	// resp, err := http.Get(url)
 	resp, err := httpGet(url)
 

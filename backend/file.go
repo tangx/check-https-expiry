@@ -1,17 +1,26 @@
 package backend
 
 import (
-	"io/ioutil"
+	"bufio"
+	"io"
 	"log"
-	"strings"
+	"os"
 )
 
-func DomainsFromFile(path string) []string {
-	body, err := ioutil.ReadFile(path)
+func DomainsFromFile(path string) (result []string) {
+	f, err := os.Open(path)
 	if err != nil {
-		log.Fatalf("%s", err)
+		log.Fatalf("%s\n", err)
 	}
 
-	l := strings.Split(string(body), "\n")
-	return l
+	br := bufio.NewReader(f)
+	for {
+		line, _, c := br.ReadLine()
+		if c == io.EOF {
+			break
+		}
+		result = append(result, string(line))
+	}
+
+	return result
 }
