@@ -15,3 +15,9 @@
 ```
 
 > note: `list.txt` 中一行一个 URL 地址。
+
+```
+www.qq.com
+https://www.baidu.com
+yahoo.com:8443
+```
